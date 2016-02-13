@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
+    android:background="#FFFFFF"
+    tools:context="com.coldcoldnuts.solo.DetailsActivity"
+    android:focusableInTouchMode="true">
+
+    <include layout="@layout/list_row_layout"
+        android:id="@+id/topic"></include>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@+id/topic"
+        android:id="@+id/details_custom_list"
+        android:layout_above="@+id/post_reply"
+        android:transcriptMode="alwaysScroll"
+        android:divider="#FFCC00"
+        android:layout_marginBottom="15dp"></ListView>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:hint="@string/reply_to_this_topic"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/send_reply"
+        android:layout_toStartOf="@+id/send_reply"
+        android:id="@+id/post_reply"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="15dp"
+        android:textSize="18sp"
+        android:elevation="4dp"
+        android:layout_marginBottom="10dp"
+        />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/send_reply"
+        android:src="@drawable/ic_send_white_24dp"
+        android:background="#000000"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/details_custom_list"
+        android:layout_alignEnd="@+id/details_custom_list"
+        android:layout_alignBottom="@+id/details_custom_list"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="10dp"
+        android:elevation="4dp"/>
+
+</RelativeLayout>
