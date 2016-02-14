@@ -16,6 +16,7 @@ import org.json.JSONObject;
  * Utility class to provide basic functions such as getting username
  */
 public class Utils {
+    public static final String SERVER_URL_JOBS = "http://10.0.0.24/testingsite/getJobsJson";
 
     public static String username = "no username yet";
     public static Uri picture = null;

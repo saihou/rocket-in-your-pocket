@@ -15,11 +15,11 @@ import java.util.ArrayList;
  * Created by Huiwen on 16/1/16.
  */
 public class ChatCustomListAdapter extends BaseAdapter {
-    private ArrayList<ListingItem> listData;
+    private ArrayList<ChatItem> listData;
     private LayoutInflater layoutInflater;
     private Context context;
 
-    public ChatCustomListAdapter(Context aContext, ArrayList<ListingItem> listData) {
+    public ChatCustomListAdapter(Context aContext, ArrayList<ChatItem> listData) {
         this.listData = listData;
         layoutInflater = LayoutInflater.from(aContext);
         context = aContext;
@@ -53,8 +53,8 @@ public class ChatCustomListAdapter extends BaseAdapter {
             holder = (ChatViewHolder) convertView.getTag();
         }
 
-        holder.messageView.setText(listData.get(position).getJobTitle());
-        holder.nameView.setText(listData.get(position).getCompanyName());
+        holder.messageView.setText(listData.get(position).getMessage());
+        holder.nameView.setText(listData.get(position).getSender());
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.FILL_PARENT);
         if (isMine(holder.nameView.getText().toString().trim())) {

@@ -17,18 +17,52 @@
 
     <TextView
         android:id="@+id/title"
+        android:text="Job Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/imageView"
-        android:layout_marginLeft="80dp"
         android:elevation="6dp"
         android:padding="5dp"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
-        android:typeface="sans" />
+        android:typeface="sans"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/reporter"
+        android:layout_alignStart="@+id/reporter"
+        android:layout_toLeftOf="@+id/payment_info"
+        android:layout_toStartOf="@+id/payment_info" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/payment_info"
+        android:text="$20.00"
+        android:padding="5dp"
+        android:textColor="#FFFFFF"
+        android:typeface="sans"
+        android:textSize="20sp"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_alignRight="@+id/imageView"
+        android:layout_alignEnd="@+id/imageView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/job_desc"
+        android:text="Description Description Description Description Description Description"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:paddingLeft="5dp"
+        android:textColor="#FFFFFF"
+        android:typeface="sans"
+        android:textSize="12sp"
+        android:layout_below="@+id/title"
+        android:layout_alignLeft="@+id/title"
+        android:layout_alignStart="@+id/title"
+        android:ellipsize="marquee"
+        android:maxLines="2"
+        android:maxLength="80"
+        android:layout_toLeftOf="@+id/payment_info"
+        android:layout_toStartOf="@+id/payment_info" />
 
     <TextView
         android:id="@+id/reporter"
@@ -40,8 +74,12 @@
         android:layout_marginLeft="80dp"
         android:elevation="6dp"
         android:padding="5dp"
+        android:text="Company"
         android:textColor="#FFFFFF"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_toLeftOf="@+id/textView"
+        android:layout_toStartOf="@+id/textView" />
 
     <TextView
         android:id="@+id/chatroom_btn"
@@ -50,7 +88,7 @@
         android:layout_alignBottom="@+id/imageView"
         android:layout_alignEnd="@+id/imageView"
         android:layout_alignRight="@+id/imageView"
-        android:drawableRight="@drawable/ic_send_white_24dp"
+        android:drawableRight="@drawable/ic_info_white_24dp"
         android:elevation="6dp"
         android:padding="5dp" />
 
@@ -76,13 +114,14 @@
         android:src="@drawable/avatar_placeholder" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:text="@string/respond_offer"
+            android:text="@string/details_text"
             android:textColor="#FFFFFF"
             android:paddingTop="2dp"
             android:layout_alignBottom="@+id/reporter"
             android:layout_toLeftOf="@+id/chatroom_btn"
-            android:layout_toStartOf="@+id/chatroom_btn"
-            android:textSize="17sp"/>
+            android:gravity="right"
+            android:textSize="12sp"
+            android:id="@+id/textView" />
 </RelativeLayout>

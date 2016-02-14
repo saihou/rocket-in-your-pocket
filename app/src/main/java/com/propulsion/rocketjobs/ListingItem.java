@@ -7,6 +7,8 @@ public class ListingItem {
     private String jobTitle;
     private String companyName;
     private String id;
+    private String jobDesc;
+    private String paymentInfo;
     private boolean status;
 
     public String getJobTitle() {
@@ -33,9 +35,26 @@ public class ListingItem {
         this.id = id;
     }
 
+    public String getJobDesc() {
+        return jobDesc;
+    }
+
+    public void setJobDesc(String jobDesc) {
+        this.jobDesc = jobDesc;
+    }
+
+    public String getPaymentInfo() {
+        return paymentInfo;
+    }
+
+    public void setPaymentInfo(String paymentInfo) {
+        this.paymentInfo = paymentInfo;
+    }
+
     public boolean getStatus() {
         return status;
     }
+
     public void setStatus(boolean status) {
         this.status = status;
     }

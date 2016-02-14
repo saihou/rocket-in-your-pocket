@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -54,6 +55,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private CheckBox rememberMe;
 
     CallbackManager callbackManager;
 
@@ -78,9 +80,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 .clientSecret("qqyAGbhRX7NNbYTMOF-zrW4UPHD0aJ_Nc-XeZyOMPpc")
                 .build());
 
+        User currentUser = User.getCurrentUser();
+        if (currentUser!=null) {
+            Utils.setGuestDetails(currentUser.getUserName());
+            Intent launchMainPage = new Intent(getApplicationContext(), com.propulsion.rocketjobs.MainActivity.class);
+            startActivity(launchMainPage);
+            finish();
+        }
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
+        rememberMe = (CheckBox) findViewById(R.id.remember_me);
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -151,6 +162,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        boolean remember_me = rememberMe.isChecked();
 
         boolean cancel = false;
         View focusView = null;
@@ -176,7 +188,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(email, password, remember_me);
             mAuthTask.execute((Void) null);
         }
 
@@ -270,15 +282,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private String mPassword;
+        private boolean mRemember;
         int status = 0;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(String email, String password, boolean remember) {
             mEmail = email;
             mPassword = password;
+            mRemember = remember;
         }
 
         protected void login() {
-            User.login(mEmail, mPassword, false, new ApiCallback<Boolean>() {
+            User.login(mEmail, mPassword, mRemember, new ApiCallback<Boolean>() {
                 public void success(Boolean aBoolean) {
                     Log.d(TAG, "login(): success! boolean=" + aBoolean);
                     Max.initModule(MMX.getModule(), new ApiCallback<Boolean>() {

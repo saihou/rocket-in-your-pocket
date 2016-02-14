@@ -1,8 +1,9 @@
 package com.propulsion.rocketjobs;
 
+import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,8 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class ContentFragment extends Fragment {
@@ -75,8 +81,9 @@ public class ContentFragment extends Fragment {
 
         final ListView lv1 = (ListView) refreshView.findViewById(R.id.custom_list);
         mAdapter = new CustomListAdapter(getActivity(), mMessages);
-        showDummyData();
         lv1.setAdapter(mAdapter);
+
+        new GetJobsListTask(this).execute(Utils.SERVER_URL_JOBS);
 
         return view;
     }
@@ -100,19 +107,89 @@ public class ContentFragment extends Fragment {
 
     }
 
-    private void showDummyData() {
-        if (!Utils.isConnected) return;
-        mMessages.add(makeDummyData("Receiptionist", "Playphone", "1234567890"));
-        mMessages.add(makeDummyData("Cashier", "KFC", "0987654321"));
-        mMessages.add(makeDummyData("Loading/Unloading", "FedEx", "0987654321"));
+
+    public void updateUi(JSONArray result) {
+        if (result == null) {
+            showDummyData();
+        }
+
+        for (int i=0; i<result.length();i++) {
+            JSONObject item = result.optJSONObject(0);
+
+            String company = item.optString("company");
+            String title = item.optString("title");
+            String payment = item.optString("amount");
+            String desc = item.optString("description");
+
+            ListingItem lItem = createNewListingItem(title, desc, company, payment);
+            mMessages.add(lItem);
+        }
         mAdapter.notifyDataSetChanged();
     }
 
-    public static ListingItem makeDummyData(String headline, String reporter, String date) {
+    private void showDummyData() {
+        if (!Utils.isConnected) return;
+        mMessages.add(makeDummyData("Receiptionist", "Playphone", "Awesome job, check it out", "$60"));
+        mMessages.add(makeDummyData("Cashier", "KFC", "Don't work here", "$40"));
+        mMessages.add(makeDummyData("Loading/Unloading", "FedEx", "You will be working alongside ...", "70"));
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public static ListingItem createNewListingItem(String jobTitle, String jobDesc, String company, String paymentInfo) {
+        ListingItem dummy = new ListingItem();
+        dummy.setJobTitle(jobTitle);
+        dummy.setCompanyName(company);
+        dummy.setJobDesc(jobDesc);
+        dummy.setPaymentInfo(paymentInfo);
+        return dummy;
+    }
+
+    public static ListingItem makeDummyData(String headline, String reporter, String desc, String payment) {
         ListingItem dummy = new ListingItem();
         dummy.setJobTitle(headline);
         dummy.setCompanyName(reporter);
-        dummy.setId(date);
+        dummy.setJobDesc(desc);
+        dummy.setPaymentInfo(payment);
         return dummy;
+    }
+
+
+    public class GetJobsListTask extends AsyncTask<String, Void, JSONArray> {
+
+        Fragment callingFragment;
+
+        public GetJobsListTask(Fragment f) {
+            callingFragment = f;
+        }
+
+        @Override
+        protected JSONArray doInBackground(String... params) {
+            JSONArray json = null;
+            String resultToDisplay = "";
+
+            try {
+                URL url = new URL(params[0]);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null)
+                    resultToDisplay += inputLine;
+                in.close();
+
+                json = new JSONArray(resultToDisplay);
+            } catch (Exception e) {
+
+            }
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(final JSONArray result) {
+            ContentFragment fragment = (ContentFragment) callingFragment;
+            fragment.updateUi(result);
+        }
     }
 }

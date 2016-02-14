@@ -25,7 +25,7 @@
     <!-- when connection to socket is not successful -->
     <string name="error_connect">Failed to connect</string>
     <string name="reply_to_this_topic">Reply to this topic...</string>
-    <string name="respond_offer">Respond to offer</string>
+    <string name="details_text">Tap for Details</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

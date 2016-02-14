@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 /**
@@ -47,9 +46,11 @@ public class CustomListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.jobTitleName = (TextView) convertView.findViewById(R.id.title);
             holder.companyName = (TextView) convertView.findViewById(R.id.reporter);
-            holder.reportedChatroomBtn = (TextView) convertView.findViewById(R.id.chatroom_btn);
+            holder.tapDetailsButton = (TextView) convertView.findViewById(R.id.chatroom_btn);
             holder.jobId = (TextView) convertView.findViewById(R.id.jobId);
             holder.profilePicView = (ImageView) convertView.findViewById(R.id.profile_picture);
+            holder.jobDesc = (TextView) convertView.findViewById(R.id.job_desc);
+            holder.paymentInfo = (TextView) convertView.findViewById(R.id.payment_info);
 
             ImageView background = (ImageView) convertView.findViewById(R.id.imageView);
             setRandomBackground(background, position);
@@ -57,10 +58,12 @@ public class CustomListAdapter extends BaseAdapter {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(activity.getApplicationContext(), "HELLO", Toast.LENGTH_LONG).show();
-                    JobDetailsFragment fragment = JobDetailsFragment.newInstance("", "");
+                    final String jobTitle = holder.jobTitleName.getText().toString().trim();
+                    final String companyName = holder.companyName.getText().toString().trim();
+
+                    JobDetailsFragment fragment = JobDetailsFragment.newInstance(jobTitle, companyName);
                     android.app.FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.frame,fragment).addToBackStack("").commit();
+                    fragmentTransaction.replace(R.id.frame,fragment).addToBackStack(null).commit();
                 }
             });
             convertView.setTag(holder);
@@ -73,10 +76,11 @@ public class CustomListAdapter extends BaseAdapter {
                 "avatar_female", "drawable", activity.getApplicationContext().getPackageName() );
 
         holder.profilePicView.setImageResource(resourceIdFemale);
-
         holder.jobTitleName.setText(listData.get(position).getJobTitle());
         holder.companyName.setText(listData.get(position).getCompanyName());
         holder.jobId.setText(listData.get(position).getId());
+        holder.paymentInfo.setText((listData.get(position).getPaymentInfo()));
+        holder.jobDesc.setText(listData.get(position).getJobDesc());
         return convertView;
     }
 
@@ -107,8 +111,10 @@ public class CustomListAdapter extends BaseAdapter {
     static class ViewHolder {
         TextView jobTitleName;
         TextView companyName;
-        TextView reportedChatroomBtn;
+        TextView tapDetailsButton;
         TextView jobId;
+        TextView jobDesc;
+        TextView paymentInfo;
         ImageView profilePicView;
     }
 }

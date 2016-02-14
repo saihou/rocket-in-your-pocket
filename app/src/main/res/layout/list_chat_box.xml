@@ -10,7 +10,7 @@
     android:background="@color/pastelBlue">
 
     <TextView
-        android:id="@+id/chat_other_person"
+        android:id="@+id/chat_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_email_black_24dp"
