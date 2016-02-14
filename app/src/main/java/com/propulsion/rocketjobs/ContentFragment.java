@@ -2,7 +2,7 @@ package com.propulsion.rocketjobs;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,7 +74,7 @@ public class ContentFragment extends Fragment {
         mMessages = new ArrayList<>();
 
         final ListView lv1 = (ListView) refreshView.findViewById(R.id.custom_list);
-        mAdapter = new CustomListAdapter(getContext(), mMessages);
+        mAdapter = new CustomListAdapter(getActivity(), mMessages);
         showDummyData();
         lv1.setAdapter(mAdapter);
 
@@ -110,9 +110,9 @@ public class ContentFragment extends Fragment {
 
     public static ListingItem makeDummyData(String headline, String reporter, String date) {
         ListingItem dummy = new ListingItem();
-        dummy.setHeadline(headline);
-        dummy.setReporterName(reporter);
-        dummy.setDate(date);
+        dummy.setJobTitle(headline);
+        dummy.setCompanyName(reporter);
+        dummy.setId(date);
         return dummy;
     }
 }

@@ -45,9 +45,9 @@ public class Constants {
                 String user = post.getString("username");
                 String currTime = post.getString("time");
                 ListingItem newsData = new ListingItem();
-                newsData.setHeadline(message);
-                newsData.setReporterName(user);
-                newsData.setDate(currTime);
+                newsData.setJobTitle(message);
+                newsData.setCompanyName(user);
+                newsData.setId(currTime);
                 if (mRoomName.equals(MAIN_ROOM)) {
                     mMessages.add(0, newsData);
                 } else {
@@ -92,9 +92,9 @@ public class Constants {
 
         ListingItem newsData = new ListingItem();
         try {
-            newsData.setHeadline(newMsg.getString("message"));
-            newsData.setReporterName(newMsg.getString("username"));
-            newsData.setDate(newMsg.getString("time"));
+            newsData.setJobTitle(newMsg.getString("message"));
+            newsData.setCompanyName(newMsg.getString("username"));
+            newsData.setId(newMsg.getString("time"));
             if (mRoomName.equals(MAIN_ROOM)) {
                 mMessages.add(0, newsData);
             } else {

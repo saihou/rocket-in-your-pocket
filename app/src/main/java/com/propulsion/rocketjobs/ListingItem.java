@@ -4,30 +4,39 @@ package com.propulsion.rocketjobs;
  * Created by Huiwen on 16/1/16.
  */
 public class ListingItem {
-    private String headline;
-    private String reporterName;
-    private String date;
-    public String getHeadline() {
-        return headline;
+    private String jobTitle;
+    private String companyName;
+    private String id;
+    private boolean status;
+
+    public String getJobTitle() {
+        return jobTitle;
     }
 
-    public void setHeadline(String headline) {
-        this.headline = headline;
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
     }
 
-    public String getReporterName() {
-        return reporterName;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setReporterName(String reporterName) {
-        this.reporterName = reporterName;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
-    public String getDate() {
-        return date;
+    public String getId() {
+        return id;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public boolean getStatus() {
+        return status;
+    }
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

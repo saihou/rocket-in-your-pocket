@@ -1,5 +1,6 @@
 package com.propulsion.rocketjobs;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,7 +17,11 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
+    public void replaceFragment(Fragment f) {
+        android.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame,f);
+        fragmentTransaction.commit();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +43,7 @@ public class MainActivity extends AppCompatActivity
         //set default to job listings (aka content)
         navigationView.setCheckedItem(R.id.nav_feed);
         ContentFragment fragment = new ContentFragment();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        android.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame, fragment);
         fragmentTransaction.commit();
 
@@ -115,7 +120,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_feed) {
             getSupportActionBar().setTitle(R.string.title_activity_main);
             ContentFragment fragment = new ContentFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            android.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.frame,fragment);
             fragmentTransaction.commit();
         } else if (id == R.id.nav_settings) {

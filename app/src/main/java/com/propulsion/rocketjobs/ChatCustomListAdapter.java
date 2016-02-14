@@ -53,8 +53,8 @@ public class ChatCustomListAdapter extends BaseAdapter {
             holder = (ChatViewHolder) convertView.getTag();
         }
 
-        holder.messageView.setText(listData.get(position).getHeadline());
-        holder.nameView.setText(listData.get(position).getReporterName());
+        holder.messageView.setText(listData.get(position).getJobTitle());
+        holder.nameView.setText(listData.get(position).getCompanyName());
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.FILL_PARENT);
         if (isMine(holder.nameView.getText().toString().trim())) {

@@ -3,6 +3,7 @@ package com.propulsion.rocketjobs;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -10,18 +11,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.magnet.max.android.User;
+import com.magnet.mmx.client.api.ListResult;
 import com.magnet.mmx.client.api.MMXChannel;
+import com.magnet.mmx.client.api.MMXMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ChatActivity extends AppCompatActivity {
 
+    public static final String TEMP_CHANNEL_NAME = "MyFirstChat";
     private ChatCustomListAdapter mAdapter;
+
+    private MMXChannel channel;
 
     // TODO: edit these variables and get the value from Intent
     private String mOtherUser = "from_detail"; // name of the other user of this private chat
@@ -32,6 +39,8 @@ public class ChatActivity extends AppCompatActivity {
     private ArrayList<ListingItem> mMessagesChat;
     private JSONObject newData;
 
+    private String TAG = "ChatActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,24 +48,31 @@ public class ChatActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-
-        String name = "MyFirstChat";
-        String uid = User.getCurrentUserId();
-        Set<String> userIds = new HashSet<>(10);
-        userIds.add(uid);
-        String summary = "Chat channel for myself";
-        // Create the channel with predefined users
-        MMXChannel.create(name, summary, false, MMXChannel.PublishPermission.SUBSCRIBER, userIds, new MMXChannel.OnFinishedListener<MMXChannel>() {
+        // Search private channel
+        MMXChannel.findPrivateChannelsByName(TEMP_CHANNEL_NAME, 10, 0, new MMXChannel.OnFinishedListener<ListResult<MMXChannel>>() {
             @Override
-            public void onSuccess(MMXChannel mmxChannel) {
-                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
+            public void onSuccess(ListResult<MMXChannel> result) {
+                channel = result.items.get(0);
             }
 
             @Override
             public void onFailure(MMXChannel.FailureCode failureCode, Throwable throwable) {
-                Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_LONG).show();
+                createNewMagnetChannel();
             }
         });
+
+//        MMX.EventListener eventListener =
+//                new MMX.EventListener() {
+//                    public boolean onMessageReceived(MMXMessage message) {
+//
+//                        // message.getContent() gives you the content
+//                        Log.v("ChatAct", message.getContent().toString());
+//                        //Toast.makeText(this, message.getContent(), Toast.LENGTH_LONG);
+//                        return false;
+//                    }
+//                };
+//        MMX.registerListener(eventListener);
+// IMPORTANT: be sure to make the corresponding call to MMX.unregisterListener(eventListener) to prevent leaking the listener
 
 
         mUsername = Utils.getUsername();
@@ -93,9 +109,62 @@ public class ChatActivity extends AppCompatActivity {
                     post_reply.setText("");
 
                     mMessagesChat.add(ContentFragment.makeDummyData(reply, mUsername, "0000011111"));
-                    mMessagesChat.add(ContentFragment.makeDummyData(reply, "I'm definitely not "+mUsername, "0000011111"));
+                    mMessagesChat.add(ContentFragment.makeDummyData(reply, "I'm definitely not " + mUsername, "0000011111"));
                     mAdapter.notifyDataSetChanged();
+
+
+                    HashMap<String, String> content = new HashMap<String, String>();
+                    content.put("message", reply);
+                    MMXMessage.Builder builder = new MMXMessage.Builder();
+                    builder.channel(channel).content(content);
+                    MMXMessage message = builder.build();
+
+                    channel.publish(message, new MMXChannel.OnFinishedListener<String>() {
+                        @Override
+                        public void onSuccess(String s) {
+
+                        }
+
+                        @Override
+                        public void onFailure(MMXChannel.FailureCode failureCode, Throwable throwable) {
+
+                        }
+                    });
+
                 }
+            }
+        });
+    }
+
+    private void createNewMagnetChannel() {
+        String name = "MyFirstChat";
+        String uid = User.getCurrentUserId();
+        Set<String> userIds = new HashSet<>(10);
+        userIds.add(uid);
+        String summary = "Chat channel for myself";
+        // Create the channel with predefined users
+        MMXChannel.create(name, summary, false, MMXChannel.PublishPermission.SUBSCRIBER, userIds, new MMXChannel.OnFinishedListener<MMXChannel>() {
+            @Override
+            public void onSuccess(MMXChannel mmxChannel) {
+                channel = mmxChannel;
+                Log.d(TAG, "Successfully created channel " + channel.getName());
+                channel.subscribe(new MMXChannel.OnFinishedListener<String>() {
+                    @Override
+                    public void onSuccess(String subId) {
+                        Log.d(TAG, "Successfully subscribed to " + channel.getName());
+                        Toast.makeText(getApplicationContext(), "Successfully subscribed to " + channel.getName(), Toast.LENGTH_LONG);
+                    }
+
+                    @Override
+                    public void onFailure(MMXChannel.FailureCode failureCode, Throwable throwable) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(MMXChannel.FailureCode failureCode, Throwable throwable) {
+                Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_LONG).show();
             }
         });
     }

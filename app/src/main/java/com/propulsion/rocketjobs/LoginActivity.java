@@ -30,6 +30,7 @@ import com.magnet.max.android.ApiCallback;
 import com.magnet.max.android.ApiError;
 import com.magnet.max.android.Max;
 import com.magnet.max.android.User;
+import com.magnet.max.android.auth.model.UserRegistrationInfo;
 import com.magnet.max.android.config.MaxAndroidConfig;
 import com.magnet.mmx.client.api.MMX;
 
@@ -270,59 +271,67 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private final String mEmail;
         private String mPassword;
         int status = 0;
-        private boolean saveTime = true;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
         }
 
+        protected void login() {
+            User.login(mEmail, mPassword, false, new ApiCallback<Boolean>() {
+                public void success(Boolean aBoolean) {
+                    Log.d(TAG, "login(): success! boolean=" + aBoolean);
+                    Max.initModule(MMX.getModule(), new ApiCallback<Boolean>() {
+                        public void success(Boolean aBoolean) {
+                            //If an EventListener has already been registered, start the MMX messaging service
+                            //You MUST call start when you are ready to start sending and receiving messages.
+                            //Login may not always be the best time to call it.
+                            MMX.start();
+                            status = 1;
+                        }
+
+                        public void failure(ApiError apiError) {
+                            Toast.makeText(getApplicationContext(), "Unable to initialize MMX: " + apiError, Toast.LENGTH_LONG).show();
+                            status = -1;
+                        }
+                    });
+                    status = 1;
+                }
+
+                public void failure(ApiError apiError) {
+                    Log.d(TAG, "login(): failure! error=" + apiError);
+                    status = -1;
+                    //login failed, probably an incorrect password
+                }
+            });
+        }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
             try {
-
-//        User.register(new UserRegistrationInfo.Builder()
-//                .userName(Utils.getUsername())
-//                .firstName(Utils.getUsername())
-//                .password("magnet")
-//                .build(), new ApiCallback<User>() {
-//            public void success(User user) {
-//                Log.d(TAG, "register user succeeded");
-//            }
-//
-//            public void failure(ApiError apiError) {
-//                Log.d(TAG, "register user failed because: " + apiError);
-//            }
-//        });
-                if (saveTime) {
-                    mPassword = "magnet";
-                }
-                User.login(mEmail, mPassword, false, new ApiCallback<Boolean>() {
-                    public void success(Boolean aBoolean) {
-                        Log.d(TAG, "login(): success! boolean=" + aBoolean);
-                        Max.initModule(MMX.getModule(), new ApiCallback<Boolean>() {
-                            public void success(Boolean aBoolean) {
-                                //If an EventListener has already been registered, start the MMX messaging service
-                                //You MUST call start when you are ready to start sending and receiving messages.
-                                //Login may not always be the best time to call it.
-                                MMX.start();
-                                status = 1;
-                            }
-
-                            public void failure(ApiError apiError) {
-                                Toast.makeText(getApplicationContext(), "Unable to initialize MMX: " + apiError, Toast.LENGTH_LONG).show();
-                                status = -1;
-                            }
-                        });
+                User.register(new UserRegistrationInfo.Builder()
+                        .userName(mEmail)
+                        .firstName(mEmail)
+                        .password(mPassword)
+                        .build(), new ApiCallback<User>() {
+                    public void success(User user) {
+                        Log.d(TAG, "register user succeeded");
+                        login();
                     }
 
                     public void failure(ApiError apiError) {
-                        Log.d(TAG, "login(): failure! error=" + apiError);
-                        status = -1;
-                        //login failed, probably an incorrect password
+                        // User already registered. Let's login!
+                        if (apiError.getKind() == 409) {
+                            login();
+                        } else {
+                            Log.d(TAG, "register user failed because: " + apiError);
+                            status = -1;
+                        }
                     }
                 });
+
+
             } catch (Exception e) {
                 return false;
             }
@@ -343,6 +352,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Intent launchMainPage = new Intent(getApplicationContext(), com.propulsion.rocketjobs.MainActivity.class);
                 startActivity(launchMainPage);
                 finish();
+            } else {
+
             }
         }
 

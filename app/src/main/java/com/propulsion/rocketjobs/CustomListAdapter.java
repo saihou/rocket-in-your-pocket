@@ -1,7 +1,6 @@
 package com.propulsion.rocketjobs;
 
-import android.content.Context;
-import android.content.Intent;
+import android.app.Activity;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +17,12 @@ import java.util.ArrayList;
 public class CustomListAdapter extends BaseAdapter {
     private ArrayList<ListingItem> listData;
     private LayoutInflater layoutInflater;
-    private Context context;
+    private Activity activity;
 
-    public CustomListAdapter(Context aContext, ArrayList<ListingItem> listData) {
+    public CustomListAdapter(Activity aActivity, ArrayList<ListingItem> listData) {
         this.listData = listData;
-        layoutInflater = LayoutInflater.from(aContext);
-        context = aContext;
+        layoutInflater = LayoutInflater.from(aActivity.getApplicationContext());
+        activity = aActivity;
     }
 
     @Override
@@ -58,10 +57,10 @@ public class CustomListAdapter extends BaseAdapter {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO: MAGNET MESSENGER
-                    Toast.makeText(context, "HELLO", Toast.LENGTH_LONG).show();
-                    Intent respondToOffer = new Intent(context, ChatActivity.class);
-                    context.startActivity(respondToOffer);
+                    Toast.makeText(activity.getApplicationContext(), "HELLO", Toast.LENGTH_LONG).show();
+                    JobDetailsFragment fragment = JobDetailsFragment.newInstance("", "");
+                    android.app.FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.frame,fragment).addToBackStack("").commit();
                 }
             });
             convertView.setTag(holder);
@@ -69,15 +68,15 @@ public class CustomListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Resources res = context.getResources();
+        Resources res = activity.getResources();
         int resourceIdFemale = res.getIdentifier(
-                "avatar_female", "drawable", context.getPackageName() );
+                "avatar_female", "drawable", activity.getApplicationContext().getPackageName() );
 
         holder.profilePicView.setImageResource(resourceIdFemale);
 
-        holder.jobTitleName.setText(listData.get(position).getHeadline());
-        holder.companyName.setText(listData.get(position).getReporterName());
-        holder.jobId.setText(listData.get(position).getDate());
+        holder.jobTitleName.setText(listData.get(position).getJobTitle());
+        holder.companyName.setText(listData.get(position).getCompanyName());
+        holder.jobId.setText(listData.get(position).getId());
         return convertView;
     }
 

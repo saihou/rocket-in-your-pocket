@@ -97,8 +97,8 @@
     <orderEntry type="library" exported="" name="mmx-common-api-2.5.0" level="project" />
     <orderEntry type="library" exported="" name="design-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="mmx-dnsjava-2.1.6" level="project" />
-    <orderEntry type="library" exported="" name="magnet-max-android-sdk-2.5.0" level="project" />
     <orderEntry type="library" exported="" name="bolts-android-1.2.0" level="project" />
+    <orderEntry type="library" exported="" name="magnet-max-android-sdk-2.5.0" level="project" />
     <orderEntry type="library" exported="" name="multidex-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="magnet-mmx-client-android-2.5.0" level="project" />
     <orderEntry type="library" exported="" name="facebook-android-sdk-4.6.0" level="project" />
