@@ -16,8 +16,6 @@ import com.magnet.mmx.client.api.MMX;
 import com.magnet.mmx.client.api.MMXChannel;
 import com.magnet.mmx.client.api.MMXMessage;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,12 +31,7 @@ public class ChatActivity extends AppCompatActivity {
 
     // TODO: edit these variables and get the value from Intent
     private String chatTitle = "from_detail"; // name of the other user of this private chat
-    private String mRoomName; // the room for this private chat
-
-    // TODO: change mUsername to facebook user name
-    private String mUsername = Utils.getUsername();
     private ArrayList<ChatItem> mMessagesChat;
-    private JSONObject newData;
 
     private String TAG = "ChatActivity";
 
@@ -47,7 +40,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
 
         // Search private channel
         MMXChannel.findPrivateChannelsByName(TEMP_CHANNEL_NAME, 10, 0, new MMXChannel.OnFinishedListener<ListResult<MMXChannel>>() {
@@ -60,7 +53,7 @@ public class ChatActivity extends AppCompatActivity {
                 } else {
                     //no channels found!
                     System.out.println("Cannot find!!");
-                    //createNewMagnetChannel();
+                    createNewMagnetChannel();
                 }
             }
 
@@ -73,19 +66,19 @@ public class ChatActivity extends AppCompatActivity {
         eventListener = new MMX.EventListener() {
                     public boolean onMessageReceived(MMXMessage message) {
                         MMXChannel msgChannel = message.getChannel();
+                        System.out.println(msgChannel);
 
                         String content = message.getContent().containsKey("message") ? message.getContent().get("message") : "";
                         ChatItem cItem = new ChatItem(content, message.getSender().getUserName());
                         mMessagesChat.add(cItem);
                         mAdapter.notifyDataSetChanged();
+
                         return false;
                     }
                 };
         MMX.registerListener(eventListener);
 // IMPORTANT: be sure to make the corresponding call to MMX.unregisterListener(eventListener) to prevent leaking the listener
 
-
-        mUsername = Utils.getUsername();
         chatTitle = getIntent().getStringExtra("companyName");
         String topic = getIntent().getStringExtra("jobTitle");
         TextView intro = (TextView) findViewById(R.id.intro_to_chat);
@@ -114,23 +107,26 @@ public class ChatActivity extends AppCompatActivity {
 //                    mMessagesChat.add(ContentFragment.makeDummyData(reply, "I'm definitely not " + mUsername, "desc", "$500"));
 //                    mAdapter.notifyDataSetChanged();
 
-                    HashMap<String, String> content = new HashMap<>();
-                    content.put("message", reply);
-                    MMXMessage.Builder builder = new MMXMessage.Builder();
-                    builder.channel(channel).content(content);
-                    MMXMessage message = builder.build();
-                    channel.publish(message, new MMXChannel.OnFinishedListener<String>() {
-                        @Override
-                        public void onSuccess(String s) {
-                            Log.d(TAG, "Message published successfully!");
-                        }
+                    if (channel == null) {
+                        Toast.makeText(getApplicationContext(), "Error, cannot join chat!!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        HashMap<String, String> content = new HashMap<>();
+                        content.put("message", reply);
+                        MMXMessage.Builder builder = new MMXMessage.Builder();
+                        builder.channel(channel).content(content);
+                        MMXMessage message = builder.build();
+                        channel.publish(message, new MMXChannel.OnFinishedListener<String>() {
+                            @Override
+                            public void onSuccess(String s) {
+                                Log.d(TAG, "Message published successfully!");
+                            }
 
-                        @Override
-                        public void onFailure(MMXChannel.FailureCode failureCode, Throwable throwable) {
-                            Log.d(TAG, "Message publishing failed!");
-                        }
-                    });
-
+                            @Override
+                            public void onFailure(MMXChannel.FailureCode failureCode, Throwable throwable) {
+                                Log.d(TAG, "Message publishing failed!");
+                            }
+                        });
+                    }
                 }
             }
         });
