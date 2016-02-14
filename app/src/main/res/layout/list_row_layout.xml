@@ -90,7 +90,7 @@
         android:layout_alignBottom="@+id/imageView"
         android:layout_alignEnd="@+id/imageView"
         android:layout_alignRight="@+id/imageView"
-        android:drawableRight="@drawable/ic_info_white_24dp"
+        android:drawableRight="@drawable/ic_message_white_24dp"
         android:elevation="6dp"
         android:padding="5dp" />
 

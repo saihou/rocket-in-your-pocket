@@ -1,6 +1,7 @@
 package com.propulsion.rocketjobs;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,21 +54,13 @@ public class CustomListAdapter extends BaseAdapter {
             holder.paymentInfo = (TextView) convertView.findViewById(R.id.payment_info);
             holder.statusButton = (ImageView) convertView.findViewById(R.id.status_button);
             holder.statusName = (TextView) convertView.findViewById(R.id.status_text);
+            holder.tapChat = (TextView) convertView.findViewById(R.id.textView);
+            holder.reporter = (TextView) convertView.findViewById(R.id.chatroom_btn);
 
             ImageView background = (ImageView) convertView.findViewById(R.id.imageView);
             setRandomBackground(background, position);
 
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final String jobTitle = holder.jobTitleName.getText().toString().trim();
-                    final String companyName = holder.companyName.getText().toString().trim();
 
-                    JobDetailsFragment fragment = JobDetailsFragment.newInstance(jobTitle, companyName);
-                    android.app.FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.frame,fragment).addToBackStack(null).commit();
-                }
-            });
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -92,6 +85,30 @@ public class CustomListAdapter extends BaseAdapter {
 //                                R.drawable.yellow : R.drawable.grey;
         holder.statusButton.setImageResource(color);
 
+        if (holder.statusName.getText().toString().equalsIgnoreCase("Unavailable")) {
+            holder.tapChat.setVisibility(View.INVISIBLE);
+            holder.reporter.setVisibility(View.INVISIBLE);
+        } else {
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final String jobTitle = holder.jobTitleName.getText().toString().trim();
+                    final String companyName = holder.companyName.getText().toString().trim();
+                    final String jobDesc = holder.jobDesc.getText().toString().trim();
+
+                    Intent launchChat = new Intent(activity, ChatActivity.class);
+                    launchChat.putExtra("jobTitle", jobTitle);
+                    launchChat.putExtra("companyName", companyName);
+                    launchChat.putExtra("jobDesc", jobDesc);
+                    activity.startActivity(launchChat);
+
+//                    JobDetailsFragment fragment = JobDetailsFragment.newInstance(jobTitle, companyName);
+//                    android.app.FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
+//                    fragmentTransaction.replace(R.id.frame,fragment).addToBackStack(null).commit();
+                }
+            });
+        }
+
         return convertView;
     }
 
@@ -100,7 +117,12 @@ public class CustomListAdapter extends BaseAdapter {
     }
 
     public static String capitalize(final String line) {
-        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
+        if (line.length() > 0) {
+            return Character.toUpperCase(line.charAt(0)) + line.substring(1);
+        }
+        else {
+            return line;
+        }
     }
 
     public static void setRandomBackground(ImageView bg, int position) {
@@ -137,5 +159,7 @@ public class CustomListAdapter extends BaseAdapter {
         ImageView profilePicView;
         ImageView statusButton;
         TextView statusName;
+        TextView reporter;
+        TextView tapChat;
     }
 }

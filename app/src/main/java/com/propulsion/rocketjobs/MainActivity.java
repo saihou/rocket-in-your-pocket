@@ -118,13 +118,14 @@ public class MainActivity extends AppCompatActivity
             android.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.frame,fragment);
             fragmentTransaction.commit();
-        } else if (id == R.id.nav_settings) {
-            getSupportActionBar().setTitle("Settings");
-            SettingsFragment fragment = new SettingsFragment();
-            android.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.frame,fragment);
-            fragmentTransaction.commit();
         }
+//        else if (id == R.id.nav_settings) {
+//            getSupportActionBar().setTitle("Settings");
+//            SettingsFragment fragment = new SettingsFragment();
+//            android.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//            fragmentTransaction.replace(R.id.frame,fragment);
+//            fragmentTransaction.commit();
+//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

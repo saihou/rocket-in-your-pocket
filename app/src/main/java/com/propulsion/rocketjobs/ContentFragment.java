@@ -132,9 +132,9 @@ public class ContentFragment extends Fragment {
 
     private void showDummyData() {
         if (!Utils.isConnected) return;
-        mMessages.add(makeDummyData("Receiptionist", "Playphone", "Awesome job, check it out", "$60"));
-        mMessages.add(makeDummyData("Cashier", "KFC", "Don't work here", "$40"));
-        mMessages.add(makeDummyData("Loading/Unloading", "FedEx", "You will be working alongside ...", "70"));
+        mMessages.add(createNewListingItem("Receiptionist", "Playphone", "Awesome job, check it out", "$60", "Available"));
+        mMessages.add(createNewListingItem("Cashier", "KFC", "Don't work here", "$40", "Available"));
+        mMessages.add(createNewListingItem("Loading/Unloading", "FedEx", "You will be working alongside ...", "70", "Unavailable"));
         mAdapter.notifyDataSetChanged();
     }
 

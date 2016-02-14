@@ -1,6 +1,7 @@
 package com.propulsion.rocketjobs;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,9 +61,12 @@ public class ChatCustomListAdapter extends BaseAdapter {
         if (isMine(holder.nameView.getText().toString().trim())) {
             params.gravity = Gravity.RIGHT;
             holder.messageView.setBackgroundResource(R.drawable.speech_bubble_from_me);
+            holder.nameView.setText("Me");
+            holder.messageView.setTextColor(Color.BLACK);
         } else {
             params.gravity = Gravity.LEFT;
             holder.messageView.setBackgroundResource(R.drawable.speech_bubble_from_others);
+            holder.messageView.setTextColor(Color.WHITE);
         }
         holder.messageView.setLayoutParams(params);
 

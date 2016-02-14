@@ -27,11 +27,13 @@ public class ChatActivity extends AppCompatActivity {
     private ChatCustomListAdapter mAdapter;
 
     private MMXChannel channel;
+    private String channelName;
     private MMX.EventListener eventListener;
 
     // TODO: edit these variables and get the value from Intent
     private String chatTitle = "from_detail"; // name of the other user of this private chat
     private ArrayList<ChatItem> mMessagesChat;
+    private String mUsername;
 
     private String TAG = "ChatActivity";
 
@@ -41,9 +43,12 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         //getSupportActionBar().hide();
+        getSupportActionBar().setTitle("Private Chatroom");
+
+        final String jobDesc = getIntent().getStringExtra("jobDesc");
 
         // Search private channel
-        MMXChannel.findPrivateChannelsByName(TEMP_CHANNEL_NAME, 10, 0, new MMXChannel.OnFinishedListener<ListResult<MMXChannel>>() {
+        MMXChannel.findPublicChannelsByName(TEMP_CHANNEL_NAME, 10, 0, new MMXChannel.OnFinishedListener<ListResult<MMXChannel>>() {
             @Override
             public void onSuccess(ListResult<MMXChannel> result) {
                 if (result.totalCount > 0) {
@@ -53,7 +58,7 @@ public class ChatActivity extends AppCompatActivity {
                 } else {
                     //no channels found!
                     System.out.println("Cannot find!!");
-                    createNewMagnetChannel();
+                    createNewMagnetChannel(channelName, jobDesc);
                 }
             }
 
@@ -86,6 +91,9 @@ public class ChatActivity extends AppCompatActivity {
         TextView title = (TextView) findViewById(R.id.chat_title);
         title.setText(" " + chatTitle);
 
+        mUsername = Utils.getUsername();
+        channelName = "Chat with " + chatTitle;
+
         mMessagesChat = new ArrayList<>();
 
         ListView lv = (ListView) findViewById(R.id.custom_list_chat);
@@ -103,9 +111,6 @@ public class ChatActivity extends AppCompatActivity {
                 } else {
 
                     post_reply.setText("");
-//                    mMessagesChat.add(ContentFragment.makeDummyData(reply, mUsername, "desc", "$1000"));
-//                    mMessagesChat.add(ContentFragment.makeDummyData(reply, "I'm definitely not " + mUsername, "desc", "$500"));
-//                    mAdapter.notifyDataSetChanged();
 
                     if (channel == null) {
                         Toast.makeText(getApplicationContext(), "Error, cannot join chat!!", Toast.LENGTH_SHORT).show();
@@ -132,14 +137,13 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void createNewMagnetChannel() {
-        String name = TEMP_CHANNEL_NAME;
+    private void createNewMagnetChannel(String name, String desc) {
         String uid = User.getCurrentUserId();
         Set<String> userIds = new HashSet<>(10);
         userIds.add(uid);
-        String summary = "Chat channel for myself";
+        String summary = desc;
         // Create the channel with predefined users
-        MMXChannel.create(name, summary, false, MMXChannel.PublishPermission.SUBSCRIBER, userIds, new MMXChannel.OnFinishedListener<MMXChannel>() {
+        MMXChannel.create(name, summary, true, MMXChannel.PublishPermission.SUBSCRIBER, userIds, new MMXChannel.OnFinishedListener<MMXChannel>() {
             @Override
             public void onSuccess(MMXChannel mmxChannel) {
                 channel = mmxChannel;
