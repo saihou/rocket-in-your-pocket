@@ -1,6 +1,7 @@
 package com.propulsion.rocketjobs;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +16,11 @@ import java.util.ArrayList;
  * Created by Huiwen on 16/1/16.
  */
 public class CustomListAdapter extends BaseAdapter {
-    private ArrayList<NewsItem> listData;
+    private ArrayList<ListingItem> listData;
     private LayoutInflater layoutInflater;
     private Context context;
 
-    public CustomListAdapter(Context aContext, ArrayList<NewsItem> listData) {
+    public CustomListAdapter(Context aContext, ArrayList<ListingItem> listData) {
         this.listData = listData;
         layoutInflater = LayoutInflater.from(aContext);
         context = aContext;
@@ -57,8 +58,10 @@ public class CustomListAdapter extends BaseAdapter {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //TODO: MAGNET MESSENGER
                     Toast.makeText(context, "HELLO", Toast.LENGTH_LONG).show();
-
+                    Intent respondToOffer = new Intent(context, ChatActivity.class);
+                    context.startActivity(respondToOffer);
                 }
             });
             convertView.setTag(holder);

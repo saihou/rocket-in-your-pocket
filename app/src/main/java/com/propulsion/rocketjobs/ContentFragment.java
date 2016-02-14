@@ -25,7 +25,7 @@ public class ContentFragment extends Fragment {
     private String mParam2;
 
     private CustomListAdapter mAdapter;
-    private ArrayList<NewsItem> mMessages;
+    private ArrayList<ListingItem> mMessages;
     private String mUsername =  Utils.getUsername();
     private String mRoomName;
     private JSONObject newData;
@@ -108,8 +108,8 @@ public class ContentFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    public static NewsItem makeDummyData(String headline, String reporter, String date) {
-        NewsItem dummy = new NewsItem();
+    public static ListingItem makeDummyData(String headline, String reporter, String date) {
+        ListingItem dummy = new ListingItem();
         dummy.setHeadline(headline);
         dummy.setReporterName(reporter);
         dummy.setDate(date);

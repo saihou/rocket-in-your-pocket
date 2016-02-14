@@ -16,6 +16,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //set default to news feed (aka content)
+        //set default to job listings (aka content)
         navigationView.setCheckedItem(R.id.nav_feed);
         ContentFragment fragment = new ContentFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity
         user.setText(Utils.getUsername());
         ImageView pic = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.drawer_picture);
         pic.setImageResource(R.drawable.avatar_placeholder);
+
+
     }
 
     @Override

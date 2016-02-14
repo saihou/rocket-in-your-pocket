@@ -3,7 +3,7 @@ package com.propulsion.rocketjobs;
 /**
  * Created by Huiwen on 16/1/16.
  */
-public class NewsItem {
+public class ListingItem {
     private String headline;
     private String reporterName;
     private String date;

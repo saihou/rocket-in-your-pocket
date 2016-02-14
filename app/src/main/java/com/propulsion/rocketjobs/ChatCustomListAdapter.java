@@ -15,11 +15,11 @@ import java.util.ArrayList;
  * Created by Huiwen on 16/1/16.
  */
 public class ChatCustomListAdapter extends BaseAdapter {
-    private ArrayList<NewsItem> listData;
+    private ArrayList<ListingItem> listData;
     private LayoutInflater layoutInflater;
     private Context context;
 
-    public ChatCustomListAdapter(Context aContext, ArrayList<NewsItem> listData) {
+    public ChatCustomListAdapter(Context aContext, ArrayList<ListingItem> listData) {
         this.listData = listData;
         layoutInflater = LayoutInflater.from(aContext);
         context = aContext;

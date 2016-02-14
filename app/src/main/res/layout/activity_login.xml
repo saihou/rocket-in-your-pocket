@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/scalable_bg"
+    android:background="@color/pastelBlue"
     android:layout_alignRight="@+id/parentPanel"
     tools:context="com.propulsion.rocketjobs.LoginActivity">
 
@@ -52,8 +52,29 @@
                 android:background="#90FFFFFF"
                 android:gravity="center_horizontal"/>
 
+
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:padding="5dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="50dp"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:hint="Password"
+                android:id="@+id/password"
+                android:textColorHighlight="#FFFFFF"
+                android:background="#90FFFFFF"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal" />
+
+        </android.support.design.widget.TextInputLayout>
         <Button
             android:id="@+id/email_sign_in_button"
             style="?android:textAppearanceSmall"
@@ -69,24 +90,24 @@
             android:textColor="#FFFFFF"
             android:layout_gravity="center_horizontal"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="OR"
-            android:textStyle="bold"
-            android:layout_margin="20dp"
-            android:textColor="#FFFFFF"
-            android:textSize="18dp"
-            android:layout_gravity="center_horizontal"/>
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="OR"-->
+            <!--android:textStyle="bold"-->
+            <!--android:layout_margin="20dp"-->
+            <!--android:textColor="#FFFFFF"-->
+            <!--android:textSize="18dp"-->
+            <!--android:layout_gravity="center_horizontal"/>-->
 
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/facebook_login_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_gravity="center_horizontal" />
+        <!--<com.facebook.login.widget.LoginButton-->
+            <!--android:id="@+id/facebook_login_button"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginRight="40dp"-->
+            <!--android:layout_marginLeft="40dp"-->
+            <!--android:layout_gravity="center_horizontal" />-->
 
     </LinearLayout>
 

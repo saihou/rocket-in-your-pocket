@@ -20,7 +20,7 @@ public class Constants {
     }
 
     // helper function to populate view with history
-    public static void populate(JSONObject data, ArrayList<NewsItem> mMessages, BaseAdapter mAdapter, String mRoomName, String mUsername) {
+    public static void populate(JSONObject data, ArrayList<ListingItem> mMessages, BaseAdapter mAdapter, String mRoomName, String mUsername) {
         String username;
         String room;
         JSONArray msgHistory;
@@ -44,7 +44,7 @@ public class Constants {
                 String message = post.getString("message");
                 String user = post.getString("username");
                 String currTime = post.getString("time");
-                NewsItem newsData = new NewsItem();
+                ListingItem newsData = new ListingItem();
                 newsData.setHeadline(message);
                 newsData.setReporterName(user);
                 newsData.setDate(currTime);
@@ -61,7 +61,7 @@ public class Constants {
     }
 
     // helper function to populate view with new message
-    public static void addMsg(JSONObject data, ArrayList<NewsItem> mMessages, BaseAdapter mAdapter, String mRoomName) {
+    public static void addMsg(JSONObject data, ArrayList<ListingItem> mMessages, BaseAdapter mAdapter, String mRoomName) {
         String username;
         String message;
         String room;
@@ -90,7 +90,7 @@ public class Constants {
         }
         Log.v("test onNewMessage", newMsg.toString());
 
-        NewsItem newsData = new NewsItem();
+        ListingItem newsData = new ListingItem();
         try {
             newsData.setHeadline(newMsg.getString("message"));
             newsData.setReporterName(newMsg.getString("username"));

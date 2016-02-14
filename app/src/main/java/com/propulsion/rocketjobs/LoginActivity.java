@@ -16,18 +16,22 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
+import com.magnet.max.android.ApiCallback;
+import com.magnet.max.android.ApiError;
+import com.magnet.max.android.Max;
+import com.magnet.max.android.User;
+import com.magnet.max.android.config.MaxAndroidConfig;
+import com.magnet.mmx.client.api.MMX;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +46,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private UserLoginTask mAuthTask = null;
 
+    String TAG = "LoginActivity";
+
     // UI references.
     private AutoCompleteTextView mEmailView;
+    private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -63,37 +70,47 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-        LoginButton loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Utils.setFacebookDetails();
-                Intent launchMainPage = new Intent(getApplicationContext(), com.propulsion.rocketjobs.MainActivity.class);
-                startActivity(launchMainPage);
-                finish();
-            }
+        //First thing to do is init the Max API.
 
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-
-            }
-        });
+        Max.init(this, new MaxAndroidConfig.Builder()
+                .clientId("9dcc3394-b9ee-4bae-a13e-69f4d2598b19")
+                .clientSecret("qqyAGbhRX7NNbYTMOF-zrW4UPHD0aJ_Nc-XeZyOMPpc")
+                .build());
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mPasswordView = (EditText) findViewById(R.id.password);
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
+
+        //Facebook Login
+//        LoginButton loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
+//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                Utils.setFacebookDetails();
+//                Intent launchMainPage = new Intent(getApplicationContext(), com.propulsion.rocketjobs.MainActivity.class);
+//                startActivity(launchMainPage);
+//                finish();
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//
+//            }
+//
+//            @Override
+//            public void onError(FacebookException error) {
+//
+//            }
+//        });
+
     }
 
     @Override
@@ -132,9 +149,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
+        String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
+
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
@@ -151,7 +175,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email);
+            mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
 
@@ -244,24 +268,69 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
+        private String mPassword;
+        int status = 0;
+        private boolean saveTime = true;
 
-        UserLoginTask(String email) {
+        UserLoginTask(String email, String password) {
             mEmail = email;
+            mPassword = password;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-
             try {
-                // Simulate network access.
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
+
+//        User.register(new UserRegistrationInfo.Builder()
+//                .userName(Utils.getUsername())
+//                .firstName(Utils.getUsername())
+//                .password("magnet")
+//                .build(), new ApiCallback<User>() {
+//            public void success(User user) {
+//                Log.d(TAG, "register user succeeded");
+//            }
+//
+//            public void failure(ApiError apiError) {
+//                Log.d(TAG, "register user failed because: " + apiError);
+//            }
+//        });
+                if (saveTime) {
+                    mPassword = "magnet";
+                }
+                User.login(mEmail, mPassword, false, new ApiCallback<Boolean>() {
+                    public void success(Boolean aBoolean) {
+                        Log.d(TAG, "login(): success! boolean=" + aBoolean);
+                        Max.initModule(MMX.getModule(), new ApiCallback<Boolean>() {
+                            public void success(Boolean aBoolean) {
+                                //If an EventListener has already been registered, start the MMX messaging service
+                                //You MUST call start when you are ready to start sending and receiving messages.
+                                //Login may not always be the best time to call it.
+                                MMX.start();
+                                status = 1;
+                            }
+
+                            public void failure(ApiError apiError) {
+                                Toast.makeText(getApplicationContext(), "Unable to initialize MMX: " + apiError, Toast.LENGTH_LONG).show();
+                                status = -1;
+                            }
+                        });
+                    }
+
+                    public void failure(ApiError apiError) {
+                        Log.d(TAG, "login(): failure! error=" + apiError);
+                        status = -1;
+                        //login failed, probably an incorrect password
+                    }
+                });
+            } catch (Exception e) {
                 return false;
             }
 
-            // TODO: register the new account here.
-            return true;
+            //wait until the async call returns a result
+            while (status == 0);
+
+            return (status == 1);
         }
 
         @Override
