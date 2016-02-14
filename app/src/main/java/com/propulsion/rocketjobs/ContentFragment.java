@@ -111,17 +111,20 @@ public class ContentFragment extends Fragment {
     public void updateUi(JSONArray result) {
         if (result == null) {
             showDummyData();
+            mAdapter.notifyDataSetChanged();
+            return;
         }
 
         for (int i=0; i<result.length();i++) {
-            JSONObject item = result.optJSONObject(0);
+            JSONObject item = result.optJSONObject(i);
 
             String company = item.optString("company");
             String title = item.optString("title");
             String payment = item.optString("amount");
             String desc = item.optString("description");
+            String status = item.optString("status");
 
-            ListingItem lItem = createNewListingItem(title, desc, company, payment);
+            ListingItem lItem = createNewListingItem(title, desc, company, payment, status);
             mMessages.add(lItem);
         }
         mAdapter.notifyDataSetChanged();
@@ -135,12 +138,13 @@ public class ContentFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    public static ListingItem createNewListingItem(String jobTitle, String jobDesc, String company, String paymentInfo) {
+    public static ListingItem createNewListingItem(String jobTitle, String jobDesc, String company, String paymentInfo, String status) {
         ListingItem dummy = new ListingItem();
         dummy.setJobTitle(jobTitle);
         dummy.setCompanyName(company);
         dummy.setJobDesc(jobDesc);
         dummy.setPaymentInfo(paymentInfo);
+        dummy.setStatus(status);
         return dummy;
     }
 
@@ -152,7 +156,6 @@ public class ContentFragment extends Fragment {
         dummy.setPaymentInfo(payment);
         return dummy;
     }
-
 
     public class GetJobsListTask extends AsyncTask<String, Void, JSONArray> {
 

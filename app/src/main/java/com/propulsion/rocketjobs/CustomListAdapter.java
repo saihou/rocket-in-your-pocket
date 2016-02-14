@@ -51,6 +51,8 @@ public class CustomListAdapter extends BaseAdapter {
             holder.profilePicView = (ImageView) convertView.findViewById(R.id.profile_picture);
             holder.jobDesc = (TextView) convertView.findViewById(R.id.job_desc);
             holder.paymentInfo = (TextView) convertView.findViewById(R.id.payment_info);
+            holder.statusButton = (ImageView) convertView.findViewById(R.id.status_button);
+            holder.statusName = (TextView) convertView.findViewById(R.id.status_text);
 
             ImageView background = (ImageView) convertView.findViewById(R.id.imageView);
             setRandomBackground(background, position);
@@ -79,9 +81,26 @@ public class CustomListAdapter extends BaseAdapter {
         holder.jobTitleName.setText(listData.get(position).getJobTitle());
         holder.companyName.setText(listData.get(position).getCompanyName());
         holder.jobId.setText(listData.get(position).getId());
-        holder.paymentInfo.setText((listData.get(position).getPaymentInfo()));
+        holder.paymentInfo.setText(CustomListAdapter.prependDollarSign((listData.get(position).getPaymentInfo())));
         holder.jobDesc.setText(listData.get(position).getJobDesc());
+
+        holder.statusName.setText(CustomListAdapter.capitalize(listData.get(position).getStatus()));
+        System.out.println(holder.statusName.getText().toString());
+        int color = (holder.statusName.getText().toString().equalsIgnoreCase("Available")) ?
+                                R.drawable.green : R.drawable.grey;
+//                                (holder.statusName.getText().toString().equalsIgnoreCase("Busy")) ?
+//                                R.drawable.yellow : R.drawable.grey;
+        holder.statusButton.setImageResource(color);
+
         return convertView;
+    }
+
+    public static String prependDollarSign(final String line) {
+        return "$" + line;
+    }
+
+    public static String capitalize(final String line) {
+        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 
     public static void setRandomBackground(ImageView bg, int position) {
@@ -116,5 +135,7 @@ public class CustomListAdapter extends BaseAdapter {
         TextView jobDesc;
         TextView paymentInfo;
         ImageView profilePicView;
+        ImageView statusButton;
+        TextView statusName;
     }
 }

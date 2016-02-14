@@ -4,7 +4,7 @@ public class ChatItem {
     private String from;
     private String message;
 
-    public ChatItem(String from, String message) {
+    public ChatItem(String message, String from) {
         this.from = from;
         this.message = message;
     }

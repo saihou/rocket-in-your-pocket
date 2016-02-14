@@ -9,7 +9,7 @@ public class ListingItem {
     private String id;
     private String jobDesc;
     private String paymentInfo;
-    private boolean status;
+    private String status;
 
     public String getJobTitle() {
         return jobTitle;
@@ -51,11 +51,11 @@ public class ListingItem {
         this.paymentInfo = paymentInfo;
     }
 
-    public boolean getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 }

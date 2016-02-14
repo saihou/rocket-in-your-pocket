@@ -29,6 +29,7 @@ public class ChatActivity extends AppCompatActivity {
     private ChatCustomListAdapter mAdapter;
 
     private MMXChannel channel;
+    private MMX.EventListener eventListener;
 
     // TODO: edit these variables and get the value from Intent
     private String chatTitle = "from_detail"; // name of the other user of this private chat
@@ -55,9 +56,11 @@ public class ChatActivity extends AppCompatActivity {
                 if (result.totalCount > 0) {
                     channel = result.items.get(0);
                     System.out.println(channel);
+                    subscribeToMagnetChannel();
                 } else {
                     //no channels found!
-                    createNewMagnetChannel();
+                    System.out.println("Cannot find!!");
+                    //createNewMagnetChannel();
                 }
             }
 
@@ -67,8 +70,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        MMX.EventListener eventListener =
-                new MMX.EventListener() {
+        eventListener = new MMX.EventListener() {
                     public boolean onMessageReceived(MMXMessage message) {
                         MMXChannel msgChannel = message.getChannel();
 
@@ -135,7 +137,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void createNewMagnetChannel() {
-        String name = "MyFirstChat";
+        String name = TEMP_CHANNEL_NAME;
         String uid = User.getCurrentUserId();
         Set<String> userIds = new HashSet<>(10);
         userIds.add(uid);
@@ -146,18 +148,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onSuccess(MMXChannel mmxChannel) {
                 channel = mmxChannel;
                 Log.d(TAG, "Successfully created channel " + channel.getName());
-                channel.subscribe(new MMXChannel.OnFinishedListener<String>() {
-                    @Override
-                    public void onSuccess(String subId) {
-                        Log.d(TAG, "Successfully subscribed to " + channel.getName());
-                        Toast.makeText(getApplicationContext(), "Successfully subscribed to " + channel.getName(), Toast.LENGTH_LONG);
-                    }
-
-                    @Override
-                    public void onFailure(MMXChannel.FailureCode failureCode, Throwable throwable) {
-
-                    }
-                });
+//                subscribeToMagnetChannel();
             }
 
             @Override
@@ -167,8 +158,24 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    private void subscribeToMagnetChannel() {
+        channel.subscribe(new MMXChannel.OnFinishedListener<String>() {
+            @Override
+            public void onSuccess(String subId) {
+                Log.d(TAG, "Successfully subscribed to " + channel.getName());
+                Toast.makeText(getApplicationContext(), "Successfully subscribed to " + channel.getName(), Toast.LENGTH_LONG);
+            }
+
+            @Override
+            public void onFailure(MMXChannel.FailureCode failureCode, Throwable throwable) {
+
+            }
+        });
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+        MMX.unregisterListener(eventListener);
     }
 }
