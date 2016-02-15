@@ -30,6 +30,7 @@
         android:id="@+id/drawer_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="jack.ong@playphone.com" />
+        android:text="jack.ong@playphone.com"
+        android:visibility="invisible"/>
 
 </LinearLayout>

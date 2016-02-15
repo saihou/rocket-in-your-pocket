@@ -23,7 +23,7 @@ import java.util.Set;
 
 public class ChatActivity extends AppCompatActivity {
 
-    public static final String TEMP_CHANNEL_NAME = "MyFirstChat";
+    public static final String TEMP_CHANNEL_NAME = "ChatWithMe";
     private ChatCustomListAdapter mAdapter;
 
     private MMXChannel channel;
@@ -137,13 +137,14 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void createNewMagnetChannel(String name, String desc) {
+    private void createNewMagnetChannel(String tempName, String desc) {
+        String name = TEMP_CHANNEL_NAME;
         String uid = User.getCurrentUserId();
         Set<String> userIds = new HashSet<>(10);
         userIds.add(uid);
-        String summary = desc;
+        String summary = "Testing";
         // Create the channel with predefined users
-        MMXChannel.create(name, summary, true, MMXChannel.PublishPermission.SUBSCRIBER, userIds, new MMXChannel.OnFinishedListener<MMXChannel>() {
+        MMXChannel.create(TEMP_CHANNEL_NAME, summary, true, MMXChannel.PublishPermission.SUBSCRIBER, userIds, new MMXChannel.OnFinishedListener<MMXChannel>() {
             @Override
             public void onSuccess(MMXChannel mmxChannel) {
                 channel = mmxChannel;
